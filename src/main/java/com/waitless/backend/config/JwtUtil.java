@@ -15,28 +15,33 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
+    @Value("${jwt.secret}") // fetching of secret key mentioned in application properties
     private String secret;
 
+    // fetching of expiration duration from application properties
     @Value("${jwt.expiration}")
     private long expiration;
 
-    @PostConstruct
+    @PostConstruct // automatically uses this method once the spring created bean of this and dependencies are injected
+
+    // checking of secret key is weak or not
     public void validateSecret() {
 
         if (secret == null || secret.length() < 32) {
-
             throw new IllegalStateException(
                     "JWT secret is too weak"
             );
         }
     }
+
+    // get key is used for generating key making the secret into key
     private Key getKey() {
         return Keys.hmacShaKeyFor(
                 secret.getBytes()
         );
     }
 
+    // generating token while receiving username and role and all stats of token
     public String generateToken(String username, String role) {
 
         return Jwts.builder()
@@ -47,11 +52,11 @@ public class JwtUtil {
                 .signWith(getKey())
                 .compact();
     }
-
+    // extracting username from subject of token
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
-
+    // extracting expiration duration from token
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }

@@ -15,8 +15,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Configuration
-@EnableWebSecurity
+@Configuration // tell spring it have beans to be managed by spring boot
+@EnableWebSecurity // activate spring security  in code
+
+
 public class SecurityConfiguration {
 
     private final CustomUserDetailsService customUserDetailsService;
@@ -54,7 +56,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PUT,    "/users/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/users/**").hasAnyRole("USER", "ADMIN")
 
-                        // Business routes
+
                         .requestMatchers("/business/**").hasAnyRole("BUSINESS", "ADMIN")
 
                         // Queue management — business owners and admins

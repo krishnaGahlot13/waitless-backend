@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
 
 @Component
@@ -68,9 +67,7 @@ public class JwtFilter extends OncePerRequestFilter {
         } catch (Exception e) {
 
             log.debug("JWT token invalid or expired for path: {}", path);
-
             sendUnauthorized(response, "Invalid or expired JWT token");
-
             return;
         }
 
@@ -82,7 +79,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 UserDetails userDetails =
                         userDetailsService.loadUserByUsername(username);
 
-                // FIX: explicitly reject if validateToken returns false
+
                 if (!jwtUtil.validateToken(token, userDetails.getUsername())) {
 
                     log.debug("JWT token validation failed for user: {}", username);
